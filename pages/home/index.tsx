@@ -191,6 +191,10 @@ const HomeList: React.FC = () => {
 		return ghostPlayer.some((ghost) => ghost.number === player.number);
 	};
 	const playAMatch = () => {
+		if (ghostPlayer.length === playerList.length) {
+			alert("All players are ghost player, please add more players");
+			return;
+		}
 		//create a new match log
 		const newMatchLog: MatchLog = {
 			matchNumber: matchNumber,
