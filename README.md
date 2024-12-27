@@ -1,7 +1,4 @@
-
-Website: https://ket-chi.vercel.app/
-
-Demo: https://youtu.be/LjTUtSBL_RU?si=B6OaNwds7gw70xjG
+Author: Le Anh Kiet
 
 ### Running the development server.
 
