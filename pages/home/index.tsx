@@ -372,7 +372,21 @@ const HomeList: React.FC = () => {
 		setScoreBoard([]);
 		setNumberOfPlayerToGenerate(0);
 		playerTechniqueScoreMap.clear();
-		skillCountMap.clear();
+		setSkillCountMap(
+			new Map([
+				["Neymar Rainbow Flick", 0],
+				["El Tornado", 0],
+				["Waka Waka", 0],
+				["Sombrero Flick", 0],
+				["Okocha Sombrero Flick", 0],
+				["Bolasie Flick", 0],
+				["Fake Pass", 0],
+				["Ball Roll Chop", 0],
+				["Ball Roll Cut", 0],
+				["Ball Hop", 0],
+				["Simple Rainbow", 0],
+			])
+		);
 		setSkillCount([]);
 	};
 	const onGeneratePlayerNumberChange = (value: number | null) => {
