@@ -444,6 +444,7 @@ const HomeList: React.FC = () => {
 					</Button>
 					<hr />
 					<b>Debug</b>
+					<br />
 					<InputNumber
 						min={0}
 						addonBefore="Number to generate"
