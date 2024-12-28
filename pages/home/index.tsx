@@ -465,6 +465,7 @@ const HomeList: React.FC = () => {
 					<hr />
 					{/* show skill + skill points */}
 					<b>Skill points</b>
+					<br />
 					<Space direction="vertical">
 						{Array.from(skillMap.keys()).map((key, index) => (
 							<p key={index}>
@@ -508,6 +509,7 @@ const HomeList: React.FC = () => {
 					<b>Result</b>
 					<hr />
 					<b>Skill count</b>
+					<br />
 					<Space direction="vertical">
 						{skillCount.map((skill, index) => (
 							<p key={index}>
