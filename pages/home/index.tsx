@@ -113,19 +113,21 @@ const HomeList: React.FC = () => {
 		playerTechniqueScoreMap.set(player.name, 0);
 	});
 	//Store number of time a skill is used
-	const skillCountMap = new Map([
-		["Neymar Rainbow Flick", 0],
-		["El Tornado", 0],
-		["Waka Waka", 0],
-		["Sombrero Flick", 0],
-		["Okocha Sombrero Flick", 0],
-		["Bolasie Flick", 0],
-		["Fake Pass", 0],
-		["Ball Roll Chop", 0],
-		["Ball Roll Cut", 0],
-		["Ball Hop", 0],
-		["Simple Rainbow", 0],
-	]);
+	const [skillCountMap, setSkillCountMap] = useState(
+		new Map([
+			["Neymar Rainbow Flick", 0],
+			["El Tornado", 0],
+			["Waka Waka", 0],
+			["Sombrero Flick", 0],
+			["Okocha Sombrero Flick", 0],
+			["Bolasie Flick", 0],
+			["Fake Pass", 0],
+			["Ball Roll Chop", 0],
+			["Ball Roll Cut", 0],
+			["Ball Hop", 0],
+			["Simple Rainbow", 0],
+		])
+	);
 	function getRandomKey() {
 		const keys = Array.from(skillMap.keys());
 		const randomIndex = Math.floor(Math.random() * keys.length);
@@ -187,21 +189,36 @@ const HomeList: React.FC = () => {
 		return Math.random() < defensiveRatio ? 0 : 1;
 	};
 	const ifGhostPlayerIsExisted = (player: Player) => {
-		//check if the player is already exist in the ghostPlayer
 		return ghostPlayer.some((ghost) => ghost.number === player.number);
+	};
+	const updateSkillUsage = (skillName: string) => {
+		setSkillCountMap((prevMap) => {
+			const newMap = new Map(prevMap);
+			newMap.set(skillName, (newMap.get(skillName) || 0) + 1);
+
+			// Update skillCount state immediately after updating the map
+			const newSkillCount = Array.from(newMap.entries()).map(
+				([name, times]) => ({
+					name,
+					times,
+				})
+			);
+			newSkillCount.sort((a, b) => a.times - b.times);
+			setSkillCount(newSkillCount);
+
+			return newMap;
+		});
 	};
 	const playAMatch = () => {
 		if (ghostPlayer.length === playerList.length) {
 			alert("All players are ghost player, please add more players");
 			return;
 		}
-		//create a new match log
 		const newMatchLog: MatchLog = {
 			matchNumber: matchNumber,
 			logFromMatch: [],
 		};
 		setMatchNumber(matchNumber + 1);
-		//play the match
 		let players = [...playerList];
 		const penaltyOrder: Player[] = [];
 		//Random select a player that havent been a ghost before to take penalty first
@@ -212,12 +229,12 @@ const HomeList: React.FC = () => {
 			firstPenalty = Math.floor(Math.random() * players.length);
 		}
 		newMatchLog.logFromMatch.push(
-			`${players[firstPenalty].name} (${players[firstPenalty].number}) is the first ghost player, plus 10 to score!`
+			`${players[firstPenalty].name} (${players[firstPenalty].number}) is the first ghost player, plus 9 to score!`
 		);
-		//add 10 to the player score
+		//add 9 to the ghost player score
 		playerTechniqueScoreMap.set(
 			players[firstPenalty].name,
-			(playerTechniqueScoreMap.get(players[firstPenalty].name) || 0) + 10
+			(playerTechniqueScoreMap.get(players[firstPenalty].name) || 0) + 9
 		);
 		//add the player to ghost player
 		ghostPlayer.push(players[firstPenalty]);
@@ -241,7 +258,9 @@ const HomeList: React.FC = () => {
 			const randomSkill = currentPlayer.skillname[randomSkillIndex];
 			const skillPoint = skillMap.get(randomSkill) || 0;
 			//increase the skill count
-			skillCountMap.set(randomSkill, (skillCountMap.get(randomSkill) || 0) + 1);
+			// skillCountMap.set(randomSkill, (skillCountMap.get(randomSkill) || 0) + 1);
+			updateSkillUsage(randomSkill);
+
 			console.log(skillCountMap);
 			//pass the ball, if the ghost player defense is higher than the skill point, the ratio pass will fail
 			const passResult = checkPassing(skillPoint, ghostPlayerDefense);
@@ -274,6 +293,12 @@ const HomeList: React.FC = () => {
 					currentPlayer.name,
 					(playerTechniqueScoreMap.get(currentPlayer.name) || 0) + skillPoint
 				);
+				//Console.log that player score now
+				console.log(
+					`${currentPlayer.name} (${
+						currentPlayer.number
+					}) score now: ${playerTechniqueScoreMap.get(currentPlayer.name)}`
+				);
 				//change the current player
 				currentPlayerIndex = nextPlayerIndex;
 			}
@@ -282,12 +307,13 @@ const HomeList: React.FC = () => {
 		penaltyOrder.push(players[0]);
 		//based on penalty order, add penalty score to the player by (10 - index - 1)
 		penaltyOrder.forEach((player, index) => {
-			console.log(player.name + ": " + (10 - index - 1));
+			console.log(player.name + ": " + (10 - index - 2));
 			playerTechniqueScoreMap.set(
 				player.name,
-				(playerTechniqueScoreMap.get(player.name) || 0) + 10 - index - 1
+				(playerTechniqueScoreMap.get(player.name) || 0) + 10 - index - 2
 			);
 		});
+		console.log(penaltyOrder);
 		setMatchLogs([...matchLogs, newMatchLog]);
 		const score: scoreAPlayer[] = [];
 		playerTechniqueScoreMap.forEach((value, key) => {
@@ -346,7 +372,21 @@ const HomeList: React.FC = () => {
 		setScoreBoard([]);
 		setNumberOfPlayerToGenerate(0);
 		playerTechniqueScoreMap.clear();
-		skillCountMap.clear();
+		setSkillCountMap(
+			new Map([
+				["Neymar Rainbow Flick", 0],
+				["El Tornado", 0],
+				["Waka Waka", 0],
+				["Sombrero Flick", 0],
+				["Okocha Sombrero Flick", 0],
+				["Bolasie Flick", 0],
+				["Fake Pass", 0],
+				["Ball Roll Chop", 0],
+				["Ball Roll Cut", 0],
+				["Ball Hop", 0],
+				["Simple Rainbow", 0],
+			])
+		);
 		setSkillCount([]);
 	};
 	const onGeneratePlayerNumberChange = (value: number | null) => {
@@ -400,7 +440,7 @@ const HomeList: React.FC = () => {
 					<br />
 					<br />
 					<Button type="primary" onClick={quickDemo}>
-						Quick demo
+						Quick generate players
 					</Button>
 					<br />
 					<br />
