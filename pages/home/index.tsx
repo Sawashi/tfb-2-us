@@ -209,9 +209,30 @@ const HomeList: React.FC = () => {
 			return newMap;
 		});
 	};
-	const playAMatch = () => {
+	const handleSpecialCaseWhenStartMatch = () => {
+		//If no player in the player list, return
+		if (playerList.length === 0) {
+			alert("Please add player to play the match");
+			return false;
+		}
+		//If all players are ghost player, return
 		if (ghostPlayer.length === playerList.length) {
 			alert("All players are ghost player, please add more players");
+			return false;
+		}
+		//If number of player is less than 3, return
+		if (playerList.length < 3) {
+			alert("Please add at least 3 players to play the match");
+			return false;
+		}
+		return true;
+	};
+	const playAMatch = () => {
+		// if (ghostPlayer.length === playerList.length) {
+		// 	alert("All players are ghost player, please add more players");
+		// 	return;
+		// }
+		if (!handleSpecialCaseWhenStartMatch()) {
 			return;
 		}
 		const newMatchLog: MatchLog = {
@@ -261,7 +282,6 @@ const HomeList: React.FC = () => {
 			// skillCountMap.set(randomSkill, (skillCountMap.get(randomSkill) || 0) + 1);
 			updateSkillUsage(randomSkill);
 
-			console.log(skillCountMap);
 			//pass the ball, if the ghost player defense is higher than the skill point, the ratio pass will fail
 			const passResult = checkPassing(skillPoint, ghostPlayerDefense);
 			if (passResult === 0) {
@@ -293,12 +313,7 @@ const HomeList: React.FC = () => {
 					currentPlayer.name,
 					(playerTechniqueScoreMap.get(currentPlayer.name) || 0) + skillPoint
 				);
-				//Console.log that player score now
-				console.log(
-					`${currentPlayer.name} (${
-						currentPlayer.number
-					}) score now: ${playerTechniqueScoreMap.get(currentPlayer.name)}`
-				);
+
 				//change the current player
 				currentPlayerIndex = nextPlayerIndex;
 			}
@@ -307,7 +322,6 @@ const HomeList: React.FC = () => {
 		penaltyOrder.push(players[0]);
 		//based on penalty order, add penalty score to the player by (10 - index - 1)
 		penaltyOrder.forEach((player, index) => {
-			console.log(player.name + ": " + (10 - index - 2));
 			playerTechniqueScoreMap.set(
 				player.name,
 				(playerTechniqueScoreMap.get(player.name) || 0) + 10 - index - 2
