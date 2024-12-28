@@ -8,7 +8,7 @@ Stack: Reactjs + Ant design + Reactjs-chart-2
 ### Documents
 Demo: https://youtu.be/qr2jbM6no6M
 
-Report:
+Report: https://drive.google.com/drive/folders/1StbOb5zjSck3DU7wpj6B_luJk4Vn42Iy?usp=drive_link
 
 Screenshots:
 
