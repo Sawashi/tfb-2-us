@@ -25,7 +25,7 @@ Screenshots:
 ### Running the development server.
 
 ```bash
-    yarn dev
+    yarn run dev
 ```
 
 or
